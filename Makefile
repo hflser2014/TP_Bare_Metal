@@ -4,13 +4,13 @@ LD    = $(PREFIX)ld
 CC    = $(PREFIX)gcc
 GDB   = $(PREFIX)gdb
 
-CFLAGS = -Wall -g -O1
+CFLAGS = -Wall -g -O1 -ffreestanding
 TARGET_ARCH = -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb
 LDFLAGS = -T ld_ram.lds
 LDLIBS = -nostdlib
 
 TARGET = main
-SOURCES = main.c
+SOURCES = main.c init.c memfuncs.c
 OBJS = $(subst .c,.o,$(SOURCES)) crt0.o
 
 all: $(OBJS) $(TARGET)

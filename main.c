@@ -1,4 +1,10 @@
+int fibo(int n);
 int global_var;
+
+int main(){
+	global_var+=1;
+	return fibo(8);
+}
 
 int fibo(int n){
 	if ((n == 0)|(n == 1)) {
@@ -7,9 +13,4 @@ int fibo(int n){
 	else{
 		return fibo(n-1) + fibo(n-2);
 	}
-}
-
-
-int main(){
-	return fibo(8);
 }
