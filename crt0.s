@@ -6,7 +6,10 @@
   .global _start
 
 _start:
-  ldr sp, =_estack
-  bl init_bss
+  ldr sp, =_estack @ Initialize the stack pointer
+  bl init_bss      @ Initialize the .bss section
   bl main
+  b _exit          @ If main returns, go to a loop here to prevent undefined behavior
+
+_exit:
   b .
