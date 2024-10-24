@@ -16,21 +16,21 @@ int main(){
 	led(LED_OFF);
 	led_g_off();
 
-	for (int i=0; i<5; i++){
+	for (int i=0; i<20; i++){
 		led_g_on();
-		for (int i=0; i<100000; i++){
+		for (int i=0; i<1000000; i++){
 			asm volatile("nop");
 		}
 		led_g_off();
 
 		led(LED_YELLOW);
-		for (int i=0; i<100000; i++){
+		for (int i=0; i<1000000; i++){
 			asm volatile("nop");
 		}
 		led(LED_OFF);
 
 		led(LED_BLUE);
-		for (int i=0; i<100000; i++){
+		for (int i=0; i<1000000; i++){
 			asm volatile("nop");
 		}
 		led(LED_OFF);

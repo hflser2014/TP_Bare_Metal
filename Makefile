@@ -4,7 +4,8 @@ LD    = $(PREFIX)ld
 CC    = $(PREFIX)gcc
 GDB   = $(PREFIX)gdb
 
-CFLAGS = -Wall -g -O1 -ffreestanding
+INCLUDES = -I ./CMSIS/Include -I ./CMSIS/Device/ST/STM32L4xx/Include
+CFLAGS = -Wall -g -O1 -ffreestanding $(INCLUDES)
 TARGET_ARCH = -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb
 LDFLAGS = -T ld_ram.lds
 LDLIBS = -nostdlib

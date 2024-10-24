@@ -1,50 +1,43 @@
 // led.c 
 #include "led.h"
+#include "stm32l475xx.h"
 
-void* const RCC_base = (void *) 0x40021000;
-void* const GPIOB_base = (void *) 0x48000400;
-void* const GPIOC_base = (void *) 0x48000800;
-
-void led_init(){	
-	// activate clock, set bit 1 and 2
-	unsigned int* RCC_AHB2ENR = RCC_base + 0x4c;
-	*RCC_AHB2ENR |= ((1 << 1) | (1 << 2));
+void led_init(){
+	// activate clock by setting bit 1 and 2 of AHB2ENR
+	RCC->AHB2ENR |= (RCC_AHB2ENR_GPIOBEN | RCC_AHB2ENR_GPIOCEN);
 	
-	// Set pin mode, set bit 29:28 to 01
-	unsigned int* GPIOB_MODER = GPIOB_base + 0x00;
-	*GPIOB_MODER &= ~((1 << 29)|(1 << 28)); 
-	*GPIOB_MODER |= (1 << 28);
+	// Set pb14 to output mode
+	GPIOB->MODER &= ~GPIO_MODER_MODE14_1;
 
-	unsigned int* GPIOC_MODER = GPIOC_base + 0x00;
-	*GPIOC_MODER &= ~((1 << 19)|(1 << 18));
+	// Set pc9 to input mode
+	GPIOC->MODER &= ~GPIO_MODER_MODE9;
 }
 
 void led_g_on(){
-	unsigned int* GPIOB_BSRR = GPIOB_base + 0x18;
-	*GPIOB_BSRR |= (1 << 14); ;
+	// Set pb14 to high voltage
+	GPIOB->BSRR |= GPIO_BSRR_BS14;
 }
 
 void led_g_off(){
-	unsigned int* GPIOB_BSRR = GPIOB_base + 0x18;
-	*GPIOB_BSRR |= (1 << 30);
+	// Reset pb14 to low voltage
+	GPIOB->BSRR |= GPIO_BSRR_BR14;
 }
 
 void led(enum state s){
-	unsigned int* GPIOC_MODER = GPIOC_base + 0x00;
-	unsigned int* GPIOC_BSRR = GPIOC_base + 0x18;
 	switch(s){
 		case LED_OFF:
-			*GPIOC_MODER &= ~((1 << 19)|(1 << 18));
+			// Set pc9 to input mode
+			GPIOC->MODER &= ~GPIO_MODER_MODE9;
 			break;
 		case LED_YELLOW:
-			*GPIOC_MODER &= ~(1 << 19);
-			*GPIOC_MODER |= (1 << 18);
-			*GPIOC_BSRR = (1 << 9);
+			// Set pc9 to output mode, then set high voltage
+			GPIOC->MODER |= GPIO_MODER_MODE9_0;
+			GPIOC->BSRR |= GPIO_BSRR_BS9;
 			break;
 		case LED_BLUE:
-			*GPIOC_MODER &= ~(1 << 19);
-			*GPIOC_MODER |= (1 << 18);
-			*GPIOC_BSRR = (1 << 25);
+			// Set pc9 to output mode, then set low voltage
+			GPIOC->MODER |= GPIO_MODER_MODE9_0;
+			GPIOC->BSRR |= GPIO_BSRR_BR9;
 			break;
 	}
 }
