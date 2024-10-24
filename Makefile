@@ -11,7 +11,7 @@ LDLIBS = -nostdlib
 
 TARGET = main
 SOURCES = main.c init.c memfuncs.c led.c
-OBJS = $(subst .c,.o,$(SOURCES)) crt0.o
+OBJS = $(subst .c,.o,$(SOURCES)) crt0.o clocks.o
 
 all: $(OBJS) $(TARGET)
 
@@ -32,5 +32,5 @@ startgdbserver:
 debug: 
 	$(GDB) -x se203.gdb
 
-clean : 
-	rm -f *.o *.d $(TARGET)
+clean: 
+	rm -f $(filter-out clocks.o, $(wildcard *.o)) *.d $(TARGET)

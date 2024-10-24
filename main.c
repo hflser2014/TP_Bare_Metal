@@ -1,10 +1,16 @@
 #include "led.h"
+#include "clocks.h"
 
 int fibo(int n);
 int global_var;
 
 int main(){
 	global_var+=1;
+	
+	// section 4
+	clocks_init();
+	
+	// section 3
 	led_init();
 
 	led(LED_OFF);
