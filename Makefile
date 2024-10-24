@@ -10,13 +10,21 @@ LDFLAGS = -T ld_ram.lds
 LDLIBS = -nostdlib
 
 TARGET = main
-SOURCES = main.c init.c memfuncs.c
+SOURCES = main.c init.c memfuncs.c led.c
 OBJS = $(subst .c,.o,$(SOURCES)) crt0.o
 
 all: $(OBJS) $(TARGET)
 
 $(TARGET) : $(OBJS) $(LDS)
 	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+# Générer les fichiers indiquant les dépendances
+-include $(subst .c,.d,$(SOURCES))
+%.d : %.c
+# Comme ces lignes ne sont pas inclues dans l'énoncé de l'exercice,
+# on ajoute @ pour masquer l'affichage de ces commandes
+	@$(CC) $(CFLAGS) $(CPPFLAGS)  -MM -MF $@ -MP $<
+
 
 startgdbserver:
 	JLinkGDBServer -device STM32L475VG -endian little -if SWD -speed auto -ir -LocalhostOnly
@@ -25,4 +33,4 @@ debug:
 	$(GDB) -x se203.gdb
 
 clean : 
-	rm -f *.o $(TARGET)
+	rm -f *.o *.d $(TARGET)
