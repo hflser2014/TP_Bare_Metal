@@ -3,6 +3,7 @@
 #include "uart.h"
 #include "matrix.h"
 #include "irq.h"
+#include "buttons.h"
 
 int fibo(int n);
 unsigned int sum32(int num);
@@ -27,6 +28,7 @@ int main(){
 
 	/* section 8 */
 	irq_init();
+	button_init();
 
 	/* section 7 */ 
 	matrix_init();

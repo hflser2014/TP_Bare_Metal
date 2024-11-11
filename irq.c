@@ -103,7 +103,10 @@ MAKE_DEFAULT_HANDLER(DMA2D_IRQHandler);
 extern uint32_t _stack;
 extern uint32_t _start;
 
-void * const vector_table[] __attribute__((section(".vtor"))) = { // vector table is aligned to 256 bytes because bits[8:0] must be 0
+// vector table is aligned to 512 bytes because bits[8:0] must be 0
+// According to the Programming Manual, the vector table must be aligned to at least 128 words
+// Which is 512 bytes for a 32-bit word
+void * const vector_table[] __attribute__((aligned(512))) = { 
     // Stack and Reset Handler
     &_stack,            /* Top of stack  (initial value of the SP register) */
     &_start,             /* Reset handler (initial value of the PC register) */
