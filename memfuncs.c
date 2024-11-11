@@ -1,4 +1,4 @@
-typedef unsigned int size_t;
+#include "typedef.h"
 // GCC expect that memcpy() can also deal with overlapping regions
 // so the memcpy() and memmove() that we implemented are identical
 

@@ -11,7 +11,7 @@ LDFLAGS = -T ld_ram.lds
 LDLIBS = -nostdlib
 
 TARGET = main
-SOURCES = main.c init.c memfuncs.c led.c
+SOURCES = main.c init.c memfuncs.c led.c uart.c
 OBJS = $(subst .c,.o,$(SOURCES)) crt0.o clocks.o
 
 all: $(OBJS) $(TARGET)
@@ -29,6 +29,7 @@ $(TARGET) : $(OBJS) $(LDS)
 
 startgdbserver:
 	JLinkGDBServer -device STM32L475VG -endian little -if SWD -speed auto -ir -LocalhostOnly
+	
 
 debug: 
 	$(GDB) -x se203.gdb

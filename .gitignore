@@ -1,3 +1,4 @@
 *.o
 !clocks.o
 *.tgz
+*.gz
