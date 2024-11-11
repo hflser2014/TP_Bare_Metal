@@ -12,10 +12,10 @@ int global_var;
 int main(){
 	global_var+=1;
 
-	// section 4
+	/* section 4 */
 	clocks_init();
 
-	// section 6 Data transmission
+	/* section 6 Data transmission */
 	uart_init();
 	// uart_putchar('T');
 	// uart_puts("Hello World!\n");
@@ -24,16 +24,19 @@ int main(){
 	// uart_puts("Sum is: ");
 	// print_hex32(sum);
 
-	// section 7
+	/* section 7 */ 
 	matrix_init();
 	for (int i = 0; i < 1000000; i++) {
 		asm volatile("nop");
 	}
+	
 	for (int i = 0; i < 20; i++) {
 		test_pixels();
 	}
 
-	// section 3
+
+
+	/* section 3 */
 	led_init();
 
 	led(LED_OFF);
@@ -58,6 +61,7 @@ int main(){
 		}
 		led(LED_OFF);
 	}
+
 	return fibo(8);
 }
 
