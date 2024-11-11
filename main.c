@@ -1,6 +1,7 @@
 #include "led.h"
 #include "clocks.h"
 #include "uart.h"
+#include "matrix.h"
 
 int fibo(int n);
 unsigned int sum32(int num);
@@ -16,14 +17,21 @@ int main(){
 
 	// section 6 Data transmission
 	uart_init();
-	uart_putchar('T');
-	uart_puts("Hello World!\n");
+	// uart_putchar('T');
+	// uart_puts("Hello World!\n");
 	// echo(); // echo function used to test uart_getchar and uart_putchar
-	unsigned int sum = sum32(128);
-	uart_puts("Sum is: ");
-	print_hex32(sum);
+	// unsigned int sum = sum32(128);
+	// uart_puts("Sum is: ");
+	// print_hex32(sum);
 
-
+	// section 7
+	matrix_init();
+	for (int i = 0; i < 1000000; i++) {
+		asm volatile("nop");
+	}
+	for (int i = 0; i < 20; i++) {
+		test_pixels();
+	}
 
 	// section 3
 	led_init();
