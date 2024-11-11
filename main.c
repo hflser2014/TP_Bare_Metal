@@ -2,6 +2,7 @@
 #include "clocks.h"
 #include "uart.h"
 #include "matrix.h"
+#include "irq.h"
 
 int fibo(int n);
 unsigned int sum32(int num);
@@ -24,12 +25,15 @@ int main(){
 	// uart_puts("Sum is: ");
 	// print_hex32(sum);
 
+	/* section 8 */
+	irq_init();
+
 	/* section 7 */ 
 	matrix_init();
 	for (int i = 0; i < 1000000; i++) {
 		asm volatile("nop");
 	}
-	
+
 	for (int i = 0; i < 20; i++) {
 		test_pixels();
 	}
