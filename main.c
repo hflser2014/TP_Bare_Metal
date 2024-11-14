@@ -56,7 +56,7 @@ int main(){
 
 	// /* section 3 */
 	led_init();
-	timer_init(10000);
+	timer_init(1000000); // 1000000/(60*8) = 2083.3333
 
 	// led(LED_OFF);
 	// led_g_off();
