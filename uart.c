@@ -1,8 +1,9 @@
 // uart.c
 #include "uart.h"
+#include "matrix.h"
 #include "stm32l475xx.h"
 
-void uart_init(){
+void uart_init(int baudrate){
     // Enable clock for GPIOB
     RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;
     // Turn PB6 and PB7 on GPIOB to alternate mode, which means MODE6&7[1:0] = 10
@@ -21,9 +22,8 @@ void uart_init(){
     RCC->APB2RSTR |= RCC_APB2RSTR_USART1RST;
     RCC->APB2RSTR &= ~RCC_APB2RSTR_USART1RST;
 
-    // Set baud rate to 115200, with 80MHz clock 
-    // 80MHz / 115200 = 694d = 2b6h
-    USART1->BRR = 80000000 / 115200;
+    // BRR = fclk / baudrate
+    USART1->BRR = 80000000 / baudrate;
     // Set oversampling rate to 16: OVER8 = 0
     // Set word length to 8 bits: M[1:0]=00
     // Set parity to none: PCE = 0
@@ -67,4 +67,42 @@ void uart_gets(char *s, size_t size){
         s[i] = (char) c;
     }
     s[size-1] = '\0';
+}
+
+void frame_display_init(){
+    USART1->CR1 |= USART_CR1_RXNEIE; // Generate interrupt when the RXNE flag is set
+    NVIC_EnableIRQ(USART1_IRQn); // enable NVIC irq for USART1 interrupt
+}
+
+// Here we choose uint8_t* as type rather than rgb_color
+// because we want to write the data once we recieve an octet
+extern uint8_t frame[192];
+// if octet_count = -1, then we are not in the middle of a frame
+// It's set to 0 when we start a frame by 0xff
+static int octet_count = 0; 
+void USART1_IRQHandler(){
+    // Clear the interrupt
+    if (USART1->ISR & USART_ISR_ORE || USART1->ISR & USART_ISR_FE) {// Overrun error or Framing error
+        USART1->RQR |= USART_RQR_RXFRQ_Msk; 
+        USART1->ICR |= USART_ICR_ORECF_Msk;
+        USART1->ICR |= USART_ICR_FECF_Msk; 
+        return; // return and wait for next
+    }
+
+    // Interrupt is cleared by reading the RDR register
+    // So we don't need to clear it manually
+    // uint8_t c = uart_getchar();
+    uint8_t c = USART1->RDR & USART_RDR_RDR_Msk;
+    uart_puts("Recieved: ");
+    uart_putchar(c);
+    uart_puts("\r");
+
+    
+    if (c == 0xff || octet_count == 192){
+        octet_count = 0;
+        return;
+    }else{
+        frame[octet_count++] = c;        
+    }
+    return;
 }

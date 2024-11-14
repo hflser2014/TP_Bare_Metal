@@ -1,8 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include "typedef.h"
-
 #define RST(x) (x ? (GPIOC->BSRR = GPIO_BSRR_BS3_Msk) : (GPIOC->BSRR = GPIO_BSRR_BR3_Msk))
 #define SB(x) (x ? (GPIOC->BSRR = GPIO_BSRR_BS5_Msk) : (GPIOC->BSRR = GPIO_BSRR_BR5_Msk))
 #define LAT(x) (x ? (GPIOC->BSRR = GPIO_BSRR_BS4_Msk) : (GPIOC->BSRR = GPIO_BSRR_BR4_Msk))
@@ -17,8 +15,8 @@
 #define ROW6(x) (x ? (GPIOB->BSRR = GPIO_BSRR_BS0_Msk) : (GPIOB->BSRR = GPIO_BSRR_BR0_Msk))
 #define ROW7(x) (x ? (GPIOA->BSRR = GPIO_BSRR_BS3_Msk) : (GPIOA->BSRR = GPIO_BSRR_BR3_Msk))
 
+#include "typedef.h"
 
-typedef int bool;
 typedef struct {
     uint8_t r;
     uint8_t g;

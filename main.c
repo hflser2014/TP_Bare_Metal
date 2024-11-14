@@ -6,9 +6,10 @@
 #include "buttons.h"
 
 int global_var;
-extern const uint8_t* _binary_image_raw_start; // this is the start of the image
-extern const uint8_t* _binary_image_raw_end;
+extern const uint8_t _binary_image_raw_start; // this is the start of the image
+extern const uint8_t _binary_image_raw_end;
 extern const int _binary_image_raw_size;
+uint8_t frame[192];
 
 int fibo(int n);
 unsigned int sum32(int num);
@@ -24,7 +25,8 @@ int main(){
 	clocks_init();
 
 	/* section 6 Data transmission */
-	uart_init();
+	int baudrate = 38400;
+	uart_init(baudrate);
 	// uart_putchar('T');
 	// uart_puts("Hello World!\n");
 	// echo(); // echo function used to test uart_getchar and uart_putchar
@@ -45,35 +47,38 @@ int main(){
 	// for (int i = 0; i < 2; i++) {
 	// 	test_pixels();
 	// }
-	display_static_image(&_binary_image_raw_start, _binary_image_raw_size); 
+	// while (1){
+	// 	display_static_image(&_binary_image_raw_start, _binary_image_raw_size);
+	// }
+	frame_display_init();
+	print_frame();
 
+	// /* section 3 */
+	// led_init();
 
-	/* section 3 */
-	led_init();
+	// led(LED_OFF);
+	// led_g_off();
 
-	led(LED_OFF);
-	led_g_off();
+	// for (int i=0; i<20; i++){
+	// 	led_g_on();
+	// 	for (int i=0; i<1000000; i++){
+	// 		asm volatile("nop");
+	// 	}
+	// 	led_g_off();
 
-	for (int i=0; i<20; i++){
-		led_g_on();
-		for (int i=0; i<1000000; i++){
-			asm volatile("nop");
-		}
-		led_g_off();
+	// 	led(LED_YELLOW);
+	// 	for (int i=0; i<1000000; i++){
+	// 		asm volatile("nop");
+	// 	}
+	// 	led(LED_OFF);
 
-		led(LED_YELLOW);
-		for (int i=0; i<1000000; i++){
-			asm volatile("nop");
-		}
-		led(LED_OFF);
-
-		led(LED_BLUE);
-		for (int i=0; i<1000000; i++){
-			asm volatile("nop");
-		}
-		led(LED_OFF);
-	}
-
+	// 	led(LED_BLUE);
+	// 	for (int i=0; i<1000000; i++){
+	// 		asm volatile("nop");
+	// 	}
+	// 	led(LED_OFF);
+	// }
+	
 	return fibo(8);
 }
 

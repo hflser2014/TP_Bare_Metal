@@ -125,17 +125,18 @@ void send_byte(uint8_t val){
 }
 
 void mat_set_row(int row, const rgb_color* val){
-
+    // Close all rows to avoid undefined behavior 
+    // caused by multiple rows being open at the same time
     for (int i=7; i>=0; i--){
         send_byte(val[i].b);
         send_byte(val[i].g);
         send_byte(val[i].r);
     }
-    // Close all rows to avoid undefined behavior 
-    // caused by multiple rows being open at the same time
     desactivate_rows();
     pulse_LAT();
     activate_row(row);
+
+
 }
 
 void init_bank0(){
@@ -195,11 +196,17 @@ void display_static_image(const uint8_t* image_start, const int image_size) {
     // Display the static image
     rgb_color* image = (rgb_color*) image_start;
     int size_in_row = image_size/sizeof(rgb_color)/8; // calculate the size of the image in row
-    for (int t = 0; t < 1000000; t++){
-        // Continue to refresh the image, so that the image seems static
-        for (int i = 0; i < 8; i++) {
-            rgb_color* val = image + i * 8;
-            mat_set_row(i, val);
-        }
+    // Continue to refresh the image, so that the image seems static
+    for (int i = 0; i < 8; i++) {
+        rgb_color* val = image + i * 8;
+        mat_set_row(i, val);
+    }
+}
+
+void print_frame(){
+    extern volatile uint8_t frame[192];
+    extern const uint8_t* _binary_image_raw_start;
+    while (1){
+        display_static_image((const uint8_t*) &frame, 192);
     }
 }
