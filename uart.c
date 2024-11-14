@@ -79,8 +79,14 @@ void frame_display_init(){
 extern uint8_t frame[192];
 // if octet_count = -1, then we are not in the middle of a frame
 // It's set to 0 when we start a frame by 0xff
-static int octet_count = -1; 
+static int octet_count = 0; 
 void USART1_IRQHandler(){
+    // Reset the interrupt flag caused by FE, ORE, NE, PE, RXNE
+    if (USART1->ISR & (USART_ISR_FE | USART_ISR_ORE | USART_ISR_NE | USART_ISR_PE)){
+        USART1->ICR |= (USART_ICR_FECF | USART_ICR_ORECF | USART_ICR_NCF | USART_ICR_PECF);
+        return;
+    }
+
     // Interrupt is cleared by reading the RDR register
     // So we don't need to clear it manually
     uint8_t c = USART1->RDR & USART_RDR_RDR_Msk;
@@ -94,6 +100,7 @@ void USART1_IRQHandler(){
     }else if (octet_count == -1){
         return;
     }
+
     frame[octet_count++] = c;        
     return;
 }
