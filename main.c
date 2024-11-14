@@ -6,7 +6,7 @@
 #include "buttons.h"
 
 int global_var;
-extern const uint8_t* _binary_image_raw_start;
+extern const uint8_t* _binary_image_raw_start; // this is the start of the image
 extern const uint8_t* _binary_image_raw_end;
 extern const int _binary_image_raw_size;
 
@@ -45,10 +45,7 @@ int main(){
 	// for (int i = 0; i < 2; i++) {
 	// 	test_pixels();
 	// }
-
-	display_static_image(&_binary_image_raw_start, _binary_image_raw_size);
-	display_static_image_test();
-
+	display_static_image(&_binary_image_raw_start, _binary_image_raw_size); 
 
 
 	/* section 3 */

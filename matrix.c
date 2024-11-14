@@ -194,23 +194,7 @@ void test_pixels() {
 void display_static_image(const uint8_t* image_start, const int image_size) {
     // Display the static image
     rgb_color* image = (rgb_color*) image_start;
-    // rgb_color* image = _binary_image_raw_start;
-    int size_in_row = image_size/sizeof(rgb_color)/8; // calculate the size of the image in pixel
-    // int size_in_row = _binary_image_raw_size/sizeof(rgb_color)/8; // calculate the size of the image in pixel
-    for (int t = 0; t < 1000000; t++){
-        // Continue to refresh the image, so that the image seems static
-        for (int i = 0; i < 8; i++) {
-            rgb_color* val = image + i * 8;
-            mat_set_row(i, val);
-        }
-    }
-}
-
-void display_static_image_test(){    
-    // Display the static image
-    rgb_color* image = (rgb_color*) &_binary_image_raw_start;
-    int size_in_row = _binary_image_raw_size/sizeof(rgb_color)/8; // calculate the size of the image in pixel
-    // int size_in_row = _binary_image_raw_size/sizeof(rgb_color)/8; // calculate the size of the image in pixel
+    int size_in_row = image_size/sizeof(rgb_color)/8; // calculate the size of the image in row
     for (int t = 0; t < 1000000; t++){
         // Continue to refresh the image, so that the image seems static
         for (int i = 0; i < 8; i++) {
