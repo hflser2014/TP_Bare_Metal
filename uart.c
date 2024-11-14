@@ -79,30 +79,21 @@ void frame_display_init(){
 extern uint8_t frame[192];
 // if octet_count = -1, then we are not in the middle of a frame
 // It's set to 0 when we start a frame by 0xff
-static int octet_count = 0; 
+static int octet_count = -1; 
 void USART1_IRQHandler(){
-    // Clear the interrupt
-    if (USART1->ISR & USART_ISR_ORE || USART1->ISR & USART_ISR_FE) {// Overrun error or Framing error
-        USART1->RQR |= USART_RQR_RXFRQ_Msk; 
-        USART1->ICR |= USART_ICR_ORECF_Msk;
-        USART1->ICR |= USART_ICR_FECF_Msk; 
-        return; // return and wait for next
-    }
-
     // Interrupt is cleared by reading the RDR register
     // So we don't need to clear it manually
-    // uint8_t c = uart_getchar();
     uint8_t c = USART1->RDR & USART_RDR_RDR_Msk;
-    uart_puts("Recieved: ");
-    uart_putchar(c);
-    uart_puts("\r");
-
     
-    if (c == 0xff || octet_count == 192){
+    if (c == 0xff){
         octet_count = 0;
         return;
-    }else{
-        frame[octet_count++] = c;        
+    }else if (octet_count == 192){
+        octet_count = -1;
+        return;
+    }else if (octet_count == -1){
+        return;
     }
+    frame[octet_count++] = c;        
     return;
 }

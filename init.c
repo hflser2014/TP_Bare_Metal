@@ -5,10 +5,10 @@ extern char _etext, _data,
 
 // dst pointer is initialized when definition,
 // so that it won't be put in .bss section itself
-static unsigned int *dst = &_data;
+static unsigned int *dst = (unsigned int *) &_data;
 
 void init_bss(){
   // Zero out bss
-  for (dst = &_bstart; dst < &_bend; dst++)
+  for (dst = (unsigned int *) &_bstart; dst < (unsigned int *) &_bend; dst++)
     *dst = 0;
 }

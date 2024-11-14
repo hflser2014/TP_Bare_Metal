@@ -10,5 +10,6 @@ uint8_t uart_getchar(void);
 void uart_puts(const char *s);
 void uart_gets(char *s, size_t size);
 void USART1_IRQHandler(void);
+void frame_display_init(void);
 
 #endif
