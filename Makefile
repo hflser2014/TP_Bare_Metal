@@ -31,8 +31,8 @@ startgdbserver:
 	JLinkGDBServer -device STM32L475VG -endian little -if SWD -speed auto -ir -LocalhostOnly
 	
 
-debug: 
-	$(GDB) -x se203.gdb
+debug: $(TARGET) 
+	$(GDB) -x se203.gdb $<
 
 clean: 
 	rm -f $(filter-out clocks.o, $(wildcard *.o)) *.d $(TARGET)

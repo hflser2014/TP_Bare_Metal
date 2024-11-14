@@ -32,7 +32,7 @@ int main(){
 
 	/* section 7 */ 
 	matrix_init();
-	for (int i = 0; i < 1000000; i++) {
+	for (int i = 0; i < 1000; i++) {
 		asm volatile("nop");
 	}
 

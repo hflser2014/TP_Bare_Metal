@@ -30,26 +30,18 @@ void matrix_init(){
     init_bank0();
 
     // Close all rows
-    ROW0(0);
-    ROW1(0);
-    ROW2(0);
-    ROW3(0);
-    ROW4(0);
-    ROW5(0);
-    ROW6(0);
-    ROW7(0);
+    desactivate_rows();
 
     // Wait 150ms then set RST to 1
-    for (int i=0; i<10000000; i++){
-        pause(25);
-    }
+    pause(150000000);
     RST(1);
     SB(1);
 }
 
 void pause(int time){
     // Wait time in ns
-    const int sys_period = 12.5;
+    // 1 period = 1/40MHz = 25ns
+    const int sys_period = 25;
     for (int i=0; i<(int)(time/sys_period); i++){
         asm volatile("nop");
     }
@@ -58,7 +50,6 @@ void pause(int time){
 void pulse_LAT(){
     // Pulse LAT
     LAT(1);
-    // Wait 1 period, 1/40MHz = 25ns
     pause(25);
     LAT(0);
     pause(25);
@@ -69,7 +60,6 @@ void pulse_LAT(){
 void pulse_SCK(){
     // Pulse SCK
     SCK(0);
-    // Wait 1 period, 1/40MHz = 25ns
     pause(25);
     SCK(1);
     pause(25);
@@ -122,6 +112,7 @@ void activate_row(int row){
 void send_byte(uint8_t val){
     // Send byte
     for (int i=7; i>=0; i--){
+        // Start from Most Significant Bit
         SDA((val>>i) & 1);
         pause(25);
         pulse_SCK();
@@ -130,15 +121,15 @@ void send_byte(uint8_t val){
 }
 
 void mat_set_row(int row, const rgb_color* val){
-    for (int i=7; i>=0; i--){
-        send_byte(val[i].b);
-        send_byte(val[i].r);
-        send_byte(val[i].g);
-        
-    }
     desactivate_rows();
     pulse_LAT();
     activate_row(row);
+    for (int i=7; i>=0; i--){
+        send_byte(val[i].r);
+        send_byte(val[i].b);
+        send_byte(val[i].g);
+    }
+
 }
 
 void init_bank0(){
@@ -154,26 +145,34 @@ void init_bank0(){
     pulse_LAT();
 }
 
-void test_pixels(){
-    // Test pixels
-    for (int i=0; i<8; i++){
+void set_colors(int t, int steps, int color_order[3]) {
+    for (int i = 0; i < 8; i++) {
         rgb_color val[8];
-        for (unsigned int j=0; j<8; j++){
-            val[j].r = 32*j;
-            val[j].g = 0;
-            val[j].b = 0;
+        for (unsigned int j = 0; j < 8; j++) {
+            int base_value = (16 * j + 10);
+            val[j].r = color_order[0] == 0 ? base_value * (steps - t) / steps : 
+                       color_order[0] == 1 ? base_value * t / steps : 0;
+            val[j].g = color_order[1] == 0 ? base_value * (steps - t) / steps : 
+                       color_order[1] == 1 ? base_value * t / steps : 0;
+            val[j].b = color_order[2] == 0 ? base_value * (steps - t) / steps : 
+                       color_order[2] == 1 ? base_value * t / steps : 0;
         }
         mat_set_row(i, val);
-
     }
 }
 
-void display_static_image(uint8_t *data_start, uint8_t *data_end, int data_size){
-    // Display static image
-    for (int i=0; i<data_size; i++){
-        mat_set_row(i, (rgb_color*)data_start);
-        data_start += 24;
+void test_pixels() {
+    int steps = 1000;
+    int color_orders[3][3] = {
+        // 1 means increase, 0 means decrease, 2 means zero
+        {0, 1, 2},  // First loop: r decreases, g increases, b is zero
+        {2, 0, 1},  // Second loop: g decreases, b increases, r is zero
+        {1, 2, 0}   // Third loop: b decreases, r increases, g is zero
+    };
+
+    for (int loop = 0; loop < 3; loop++) {
+        for (int t = 0; t < steps; t++) {
+            set_colors(t, steps, color_orders[loop]);
+        }
     }
 }
-
-
