@@ -121,15 +121,17 @@ void send_byte(uint8_t val){
 }
 
 void mat_set_row(int row, const rgb_color* val){
-    desactivate_rows();
-    pulse_LAT();
-    activate_row(row);
+
     for (int i=7; i>=0; i--){
         send_byte(val[i].r);
         send_byte(val[i].b);
         send_byte(val[i].g);
     }
-
+    // Close all rows to avoid undefined behavior 
+    // caused by multiple rows being open at the same time
+    desactivate_rows();
+    pulse_LAT();
+    activate_row(row);
 }
 
 void init_bank0(){
@@ -147,9 +149,17 @@ void init_bank0(){
 
 void set_colors(int t, int steps, int color_order[3]) {
     for (int i = 0; i < 8; i++) {
+        // iterate through each row
         rgb_color val[8];
         for (unsigned int j = 0; j < 8; j++) {
-            int base_value = (16 * j + 10);
+            // iterate through each pixel in the row
+            int base_value_odd = (32 * j );
+            int base_value_even = (256 - 32 * (j+1) );
+
+            // if i is even, then the base value is base_value_even
+            // if i is odd, then the base value is base_value_odd
+            int base_value = i%2 == 0 ? base_value_even : base_value_odd;
+
             val[j].r = color_order[0] == 0 ? base_value * (steps - t) / steps : 
                        color_order[0] == 1 ? base_value * t / steps : 0;
             val[j].g = color_order[1] == 0 ? base_value * (steps - t) / steps : 
