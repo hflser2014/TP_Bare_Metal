@@ -45,18 +45,18 @@ int main(){
 		asm volatile("nop");
 	}
 
-	// for (int i = 0; i < 2; i++) {
-	// 	test_pixels();
-	// }
+	// test_pixels();
 	// while (1){
 	// 	display_static_image(&_binary_image_raw_start, _binary_image_raw_size);
 	// }
-	// frame_display_init();
-	// print_frame();
+	frame_transmission_init();
+	// while(1){
+	// 	print_frame();
+	// }
 
 	// /* section 3 */
 	led_init();
-	timer_init(1000000);
+	timer_init(10000);
 
 	// led(LED_OFF);
 	// led_g_off();

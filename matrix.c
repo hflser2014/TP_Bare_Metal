@@ -217,7 +217,5 @@ void display_static_image(const uint8_t* image_start, const int image_size) {
 
 void print_frame(){
     extern volatile uint8_t frame[192];
-    while (1){
-        display_static_image((const uint8_t*) &frame, 192);
-    }
+    display_static_image((const uint8_t*) &frame, 192);
 }

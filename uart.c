@@ -69,7 +69,7 @@ void uart_gets(char *s, size_t size){
     s[size-1] = '\0';
 }
 
-void frame_display_init(){
+void frame_transmission_init(){
     USART1->CR1 |= USART_CR1_RXNEIE; // Generate interrupt when the RXNE flag is set
     NVIC_EnableIRQ(USART1_IRQn); // enable NVIC irq for USART1 interrupt
 }

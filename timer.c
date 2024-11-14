@@ -1,6 +1,7 @@
 // timer.c
 #include "timer.h"
 #include "led.h"
+#include "matrix.h"
 #include "stm32l475xx.h"
 
 void timer_init(int max_us){
@@ -12,6 +13,7 @@ void timer_init(int max_us){
     TIM2->CNT = 0;
     // Set the timer direction to upcounting mode
     TIM2->CR1 &= ~TIM_CR1_DIR;
+    TIM2->CR1 &= ~TIM_CR1_CMS;
     // Set the prescaler to count every microsecond
     // the frequency is f_{CK_PSC} / (PSC[15:0] + 1).
     // Here 80MHz/(79+1) = 1MHz
@@ -22,6 +24,8 @@ void timer_init(int max_us){
     // Enable the interruption started by the timer update event
     TIM2->DIER |= TIM_DIER_UIE;
     
+    NVIC_SetPriority(USART1_IRQn, 1);
+    NVIC_SetPriority(TIM2_IRQn, 2);
     // Enable the interruption in the NVIC
     NVIC_EnableIRQ(TIM2_IRQn);
 
@@ -32,10 +36,7 @@ void timer_init(int max_us){
 void TIM2_IRQHandler(){
     // Clear the update interrupt flag
     TIM2->SR &= ~TIM_SR_UIF;
-    // Toggle the green led
-    if (GPIOB->ODR & GPIO_ODR_OD14){
-        led_g_off();
-    }else{
-        led_g_on();
-    }
+
+    extern volatile uint8_t frame[192];
+    display_static_image((const uint8_t*) &frame, 192);
 }
