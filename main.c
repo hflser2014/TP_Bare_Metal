@@ -20,14 +20,40 @@ void echo(void);
 
 
 int main(){
-	global_var+=1;
-
-	/* section 4 */
-	clocks_init();
-
-	/* section 6 Data transmission */
 	int baudrate = 38400;
+	clocks_init();
+	led_init();
 	uart_init(baudrate);
+	matrix_init();
+	irq_init();
+	button_init();
+	frame_transmission_init();
+	for (int i = 0; i < 1000; i++) {
+		asm volatile("nop");
+	}
+
+	/* Test led */
+	// led(LED_OFF);
+	// led_g_off();
+	// for (int i=0; i<20; i++){
+	// 	led_g_on();
+	// 	for (int i=0; i<1000000; i++){
+	// 		asm volatile("nop");
+	// 	}
+	// 	led_g_off();
+	// 	led(LED_YELLOW);
+	// 	for (int i=0; i<1000000; i++){
+	// 		asm volatile("nop");
+	// 	}
+	// 	led(LED_OFF);
+	// 	led(LED_BLUE);
+	// 	for (int i=0; i<1000000; i++){
+	// 		asm volatile("nop");
+	// 	}
+	// 	led(LED_OFF);
+	// }
+
+	/* Test of UART */
 	// uart_putchar('T');
 	// uart_puts("Hello World!\n");
 	// echo(); // echo function used to test uart_getchar and uart_putchar
@@ -35,51 +61,17 @@ int main(){
 	// uart_puts("Sum is: ");
 	// print_hex32(sum);
 
-	/* section 8 */
-	irq_init();
-	button_init();
-
-	/* section 7 */ 
-	matrix_init();
-	for (int i = 0; i < 1000; i++) {
-		asm volatile("nop");
-	}
-
+	/* Test Matrix */ 
 	// test_pixels();
 	// while (1){
 	// 	display_static_image(&_binary_image_raw_start, _binary_image_raw_size);
 	// }
-	frame_transmission_init();
 	// while(1){
 	// 	print_frame();
 	// }
 
-	// /* section 3 */
-	led_init();
-	timer_init(1000000); // 1000000/(60*8) = 2083.3333
-
-	// led(LED_OFF);
-	// led_g_off();
-
-	// for (int i=0; i<20; i++){
-	// 	led_g_on();
-	// 	for (int i=0; i<1000000; i++){
-	// 		asm volatile("nop");
-	// 	}
-	// 	led_g_off();
-
-	// 	led(LED_YELLOW);
-	// 	for (int i=0; i<1000000; i++){
-	// 		asm volatile("nop");
-	// 	}
-	// 	led(LED_OFF);
-
-	// 	led(LED_BLUE);
-	// 	for (int i=0; i<1000000; i++){
-	// 		asm volatile("nop");
-	// 	}
-	// 	led(LED_OFF);
-	// }
+	/* Test timer */
+	timer_init(100);
 	
 	return fibo(8);
 }
