@@ -11,7 +11,7 @@ LDFLAGS = -T ld_ram.lds
 LDLIBS = -nostdlib
 
 TARGET = main
-SOURCES = main.c init.c memfuncs.c led.c uart.c matrix.c irq.c buttons.c
+SOURCES = main.c init.c memfuncs.c led.c uart.c matrix.c irq.c buttons.c timer.c
 OBJS = $(subst .c,.o,$(SOURCES)) crt0.o clocks.o image.o
 
 all: $(OBJS) $(TARGET)

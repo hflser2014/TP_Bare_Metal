@@ -4,6 +4,7 @@
 #include "matrix.h"
 #include "irq.h"
 #include "buttons.h"
+#include "timer.h"
 
 int global_var;
 extern const uint8_t _binary_image_raw_start; // this is the start of the image
@@ -50,11 +51,12 @@ int main(){
 	// while (1){
 	// 	display_static_image(&_binary_image_raw_start, _binary_image_raw_size);
 	// }
-	frame_display_init();
-	print_frame();
+	// frame_display_init();
+	// print_frame();
 
 	// /* section 3 */
-	// led_init();
+	led_init();
+	timer_init(1000000);
 
 	// led(LED_OFF);
 	// led_g_off();
