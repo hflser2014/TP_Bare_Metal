@@ -12,7 +12,7 @@ LDLIBS = -nostdlib
 
 TARGET = main
 SOURCES = main.c init.c memfuncs.c led.c uart.c matrix.c irq.c buttons.c
-OBJS = $(subst .c,.o,$(SOURCES)) crt0.o clocks.o
+OBJS = $(subst .c,.o,$(SOURCES)) crt0.o clocks.o image.o
 
 all: $(OBJS) $(TARGET)
 
@@ -26,6 +26,8 @@ $(TARGET) : $(OBJS) $(LDS)
 # on ajoute @ pour masquer l'affichage de ces commandes
 	@$(CC) $(CFLAGS) $(CPPFLAGS)  -MM -MF $@ -MP $<
 
+image.o: image.raw
+	$(PREFIX)objcopy -I binary -O elf32-littlearm -B arm $< $@
 
 startgdbserver:
 	JLinkGDBServer -device STM32L475VG -endian little -if SWD -speed auto -ir -LocalhostOnly

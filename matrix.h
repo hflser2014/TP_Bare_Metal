@@ -35,6 +35,8 @@ void send_byte(uint8_t val);
 void mat_set_row(int row, const rgb_color* val);
 void init_bank0();
 void pause(int time);
+void display_static_image(const uint8_t* image_start, const int image_size);
+void display_static_image_test();
 
 void test_pixels();
 #endif

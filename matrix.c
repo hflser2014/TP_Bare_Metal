@@ -2,6 +2,10 @@
 #include "matrix.h"
 #include "stm32l475xx.h"
 
+extern const uint8_t* _binary_image_raw_start;
+extern const uint8_t* _binary_image_raw_end;
+extern const int _binary_image_raw_size;
+
 void matrix_init(){
     // activate clock by setting bit 1 and 2 of AHB2ENR
     RCC->AHB2ENR |= (RCC_AHB2ENR_GPIOAEN | RCC_AHB2ENR_GPIOBEN | RCC_AHB2ENR_GPIOCEN);
@@ -123,9 +127,9 @@ void send_byte(uint8_t val){
 void mat_set_row(int row, const rgb_color* val){
 
     for (int i=7; i>=0; i--){
-        send_byte(val[i].r);
         send_byte(val[i].b);
         send_byte(val[i].g);
+        send_byte(val[i].r);
     }
     // Close all rows to avoid undefined behavior 
     // caused by multiple rows being open at the same time
@@ -183,6 +187,35 @@ void test_pixels() {
     for (int loop = 0; loop < 3; loop++) {
         for (int t = 0; t < steps; t++) {
             set_colors(t, steps, color_orders[loop]);
+        }
+    }
+}
+
+void display_static_image(const uint8_t* image_start, const int image_size) {
+    // Display the static image
+    rgb_color* image = (rgb_color*) image_start;
+    // rgb_color* image = _binary_image_raw_start;
+    int size_in_row = image_size/sizeof(rgb_color)/8; // calculate the size of the image in pixel
+    // int size_in_row = _binary_image_raw_size/sizeof(rgb_color)/8; // calculate the size of the image in pixel
+    for (int t = 0; t < 1000000; t++){
+        // Continue to refresh the image, so that the image seems static
+        for (int i = 0; i < 8; i++) {
+            rgb_color* val = image + i * 8;
+            mat_set_row(i, val);
+        }
+    }
+}
+
+void display_static_image_test(){    
+    // Display the static image
+    rgb_color* image = (rgb_color*) &_binary_image_raw_start;
+    int size_in_row = _binary_image_raw_size/sizeof(rgb_color)/8; // calculate the size of the image in pixel
+    // int size_in_row = _binary_image_raw_size/sizeof(rgb_color)/8; // calculate the size of the image in pixel
+    for (int t = 0; t < 1000000; t++){
+        // Continue to refresh the image, so that the image seems static
+        for (int i = 0; i < 8; i++) {
+            rgb_color* val = image + i * 8;
+            mat_set_row(i, val);
         }
     }
 }

@@ -5,11 +5,17 @@
 #include "irq.h"
 #include "buttons.h"
 
+int global_var;
+extern const uint8_t* _binary_image_raw_start;
+extern const uint8_t* _binary_image_raw_end;
+extern const int _binary_image_raw_size;
+
 int fibo(int n);
 unsigned int sum32(int num);
 void print_hex32(unsigned int sum);
 void echo(void);
-int global_var;
+
+
 
 int main(){
 	global_var+=1;
@@ -36,9 +42,12 @@ int main(){
 		asm volatile("nop");
 	}
 
-	for (int i = 0; i < 20; i++) {
-		test_pixels();
-	}
+	// for (int i = 0; i < 2; i++) {
+	// 	test_pixels();
+	// }
+
+	display_static_image(&_binary_image_raw_start, _binary_image_raw_size);
+	display_static_image_test();
 
 
 
