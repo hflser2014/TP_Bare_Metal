@@ -17,8 +17,6 @@ unsigned int sum32(int num);
 void print_hex32(unsigned int sum);
 void echo(void);
 
-
-
 int main(){
 	int baudrate = 38400;
 	clocks_init();
@@ -72,7 +70,7 @@ int main(){
 
 	/* Test timer */
 	timer_init(100);
-	
+
 	return fibo(8);
 }
 

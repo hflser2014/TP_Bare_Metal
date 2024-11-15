@@ -3,8 +3,8 @@
   .cpu cortex-m4
   .thumb
 
+  .thumb_func
   .global _start
-
 _start:
   ldr sp, =_estack @ Initialize the stack pointer
   bl init_bss      @ Initialize the .bss section

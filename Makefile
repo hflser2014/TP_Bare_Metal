@@ -11,8 +11,8 @@ LDFLAGS = -T ld_ram.lds
 LDLIBS = -nostdlib
 
 TARGET = main
-SOURCES = main.c init.c memfuncs.c led.c uart.c matrix.c irq.c buttons.c timer.c
-OBJS = $(subst .c,.o,$(SOURCES)) crt0.o clocks.o image.o
+SOURCES = main.c init.c memfuncs.c led.c uart.c matrix.c irq.c buttons.c timer.c clocks.c
+OBJS = $(subst .c,.o,$(SOURCES)) crt0.o image.o
 
 all: $(OBJS) $(TARGET)
 
@@ -37,4 +37,4 @@ debug: $(TARGET)
 	$(GDB) -x se203.gdb $<
 
 clean: 
-	rm -f $(filter-out clocks.o, $(wildcard *.o)) *.d $(TARGET)
+	rm -f *.o *.d $(TARGET)

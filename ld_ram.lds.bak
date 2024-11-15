@@ -7,20 +7,16 @@ MEMORY
 
 SECTIONS
  {
-    .vtor :{
-        KEEP(*(.vtor))
-    } > Flash
-
     .text :{
         *(.text)
 	    _etext = . ;
-    } > Flash
+    } > SRAM1
 
     .rodata :{
         _rodata = . ;
 	    *(.rodata)
 	    _erodata = .;
-    } > Flash
+    } > SRAM1
 
     .data :{
 	    _data = . ;
