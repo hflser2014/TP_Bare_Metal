@@ -9,7 +9,7 @@ SECTIONS
  {
     .vtor :{
         KEEP(*(.vtor))
-    } > Flash
+    } > Flash 
 
     .text :{
         *(.text)
