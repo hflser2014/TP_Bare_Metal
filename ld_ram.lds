@@ -8,13 +8,24 @@ MEMORY
 SECTIONS
  {
     .vtor :{
+        _vtor_LMA = LOADADDR(.vtor);
+        _vtor = . ;
         KEEP(*(.vtor))
-    } > Flash 
+        _evtor = . ;
+    } > SRAM1 AT > Flash
+    
+    .text.init :{
+        _init = . ;
+        KEEP(*(.text.init))
+        _einit = . ;
+    } > Flash
 
     .text :{
+        _text_LMA = LOADADDR(.text);
+        _text = . ;
         *(.text)
 	    _etext = . ;
-    } > Flash
+    } > SRAM1 AT > Flash
 
     .rodata :{
         _rodata = . ;
@@ -23,10 +34,11 @@ SECTIONS
     } > Flash
 
     .data :{
+        _data_LMA = LOADADDR(.data);
 	    _data = . ;
         *(.data)
 	    _edata = . ;
-    } > SRAM1
+    } > SRAM1 AT > Flash
 
     .bss :{
 	    _bstart = . ;
